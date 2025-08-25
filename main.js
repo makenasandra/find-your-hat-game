@@ -42,19 +42,54 @@ class Field {
 
     }
     print() {
-        for(const r of this._field){
-        console.log(r.toString())
+        for (const r of this._field) {
+            console.log(r.toString())
 
         }
     }
+
+    static getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    static generate(height, width, percentage) {
+        const numOfHoles = Math.floor(height * width * (percentage / 100));
+        const field = []
+
+        for (let i = 0; i < height; i++) {
+            // console.log(Array(width).fill('░'))
+            field.push(Array(width).fill('░'));
+        }
+        let j = numOfHoles === 0 ? 1 : numOfHoles;
+        // console.log(field)
+        while (j > 0) {
+            let randWidth = Math.floor(this.getRandomArbitrary(1, width));
+            let randHeight = Math.floor(this.getRandomArbitrary(0, height));
+            // console.log(width, height)
+            if (field[randHeight][randWidth] !== 'O') {
+                field[randHeight][randWidth] = 'O'
+                j--;
+            }
+            // console.log(field)
+        }
+        let place = true
+        while (place) {
+            let randWidth = Math.floor(this.getRandomArbitrary(0, width));
+            let randHeight = Math.floor(this.getRandomArbitrary(0, height));
+            // console.log(width, height)
+            if (field[randHeight][randWidth] !== 'O') {
+                field[randHeight][randWidth] = '^'
+                place = false;
+            }
+            // console.log(field)
+        }
+        // console.log(field)
+        field[0][0] = '*';
+        return field
+    }
 }
 
-const myField = new Field([
-    ['*', '░', 'O'],
-    ['░', 'O', '░'],
-    ['░', '^', '░'],
-]);
-
+const myField = new Field(Field.generate(15, 10, 50));
 let play = true;
 let res;
 while (play) {
@@ -63,6 +98,7 @@ while (play) {
     res = myField.move(move)
     play = res.code;
 }
-console.log(res.msg)
+console.log(res.msg);
+
 
 
